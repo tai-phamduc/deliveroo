@@ -145,7 +145,7 @@ app.get("/api/restaurants/:restaurantId", asyncHandler(async (req, res) => {
       $unwind: "$category"
     }
   ])
-  res.json(restaurant)
+  res.json(restaurant[0])
 }))
 
 app.get("/api/restaurants/:restaurantId/dishes", asyncHandler(async (req, res) => {
