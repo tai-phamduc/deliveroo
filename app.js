@@ -66,8 +66,27 @@ app.get("/api/features/restaurants", asyncHandler(async (req, res) => {
         foreignField: "featureId",
         as: "restaurants"
       }
+    },
+    {
+      $unwind: "$restaurants"
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "restaurants.categoryId",
+        foreignField: "_id",
+        as: "restaurants.categories"
+      }
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: { $first: "$name" },
+        shortDescription: { $first: "$shortDescription" },
+        restaurants: { $push: "$restaurants" }
+      }
     }
-  ])
+  ])  
   res.json(features)
 }))
 
