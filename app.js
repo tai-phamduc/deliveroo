@@ -79,6 +79,9 @@ app.get("/api/features/restaurants", asyncHandler(async (req, res) => {
       }
     },
     {
+      $unwind: "$restaurants.categories"
+    },
+    {
       $group: {
         _id: "$_id",
         name: { $first: "$name" },
