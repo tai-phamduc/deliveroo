@@ -127,7 +127,24 @@ app.get("/api/restaurants", asyncHandler(async (req, res) => {
 
 app.get("/api/restaurants/:restaurantId", asyncHandler(async (req, res) => {
   const { restaurantId } = req.params
-  const restaurant = await Restaurant.findById(restaurantId)
+  const restaurant = await Restaurant.aggregate([
+    {
+      $match: {
+        _id: restaurantId
+      }
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    {
+      $unwind: "$category"
+    }
+  ])
   res.json(restaurant)
 }))
 
