@@ -57,6 +57,20 @@ app.get("/api/categories", asyncHandler(async (req, res) => {
   res.json(categories)
 }))
 
+app.get("/api/features/restaurants", asyncHandler(async (req, res) => {
+  const features = await Feature.aggregate([
+    {
+      $lookup: {
+        from: "restaurants",
+        localField: "_id",
+        foreignField: "featureId",
+        as: "restaurants"
+      }
+    }
+  ])
+  res.json(features)
+}))
+
 app.get("/api/restaurants", asyncHandler(async (req, res) => {
   const { category } = req.query
   if (category) {
